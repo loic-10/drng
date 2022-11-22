@@ -1,0 +1,30 @@
+{
+  "name": "drng",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loic-10/drng.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loic-10/drng/issues"
+  },
+  "homepage": "https://github.com/loic-10/drng#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "mongoose": "^6.1.6"
+  },
+  "devDependencies": {
+    "@types/react-highlight-words": "^0.16.4"
+  }
+}
