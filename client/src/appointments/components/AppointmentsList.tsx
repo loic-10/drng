@@ -28,7 +28,7 @@ function AppointmentsList() {
   const pageSize = 8;
 
   const [state, setState] = useState<{
-    orderDirection: SortOrder;
+    orderDirection: { [name: string]: SortOrder };
     searchText: string;
     left: number;
     right: number;
@@ -37,7 +37,7 @@ function AppointmentsList() {
     minIndex: number;
     maxIndex: number;
   }>({
-    orderDirection: null,
+    orderDirection: {},
     searchText: "",
     left: 33,
     right: 50,
@@ -107,6 +107,7 @@ function AppointmentsList() {
             <InputNumber
               value={state.left}
               onChange={(e: any) => {
+                console.log(e);
                 setState({ ...state, left: e });
                 setSelectedKeys(
                   (_search ? appointments : _appointments)
@@ -129,14 +130,6 @@ function AppointmentsList() {
               }}
             />
           </Col>
-        </Row>
-        <Row>
-          <Slider
-            className=" w-full"
-            range
-            value={[state.left, state.right]}
-            onChange={(e) => setState({ ...state, left: e[0], right: e[1] })}
-          />
         </Row>
         <Row
           onClick={() => {
@@ -245,8 +238,12 @@ function AppointmentsList() {
       />
     ),
   });
-  const changeOrder = (direction: SortOrder) => () => {
-    setState({ ...state, orderDirection: direction });
+  const changeOrder = (name: string, direction: SortOrder) => () => {
+    setState({
+      ...state,
+      orderDirection: { ...state.orderDirection, [name]: direction },
+    });
+    console.log({ name, direction, state });
   };
   const handleChange = (page: number) => {
     setState({
@@ -261,140 +258,26 @@ function AppointmentsList() {
 
   const columns: ColumnsType<AppointmentDTO> = [
     {
-      title: (
-        <div className="flex justify-between font-bold text-sm text-black p-0">
-          Name{" "}
-          <div>
-            <svg
-              onClick={changeOrder("ascend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4.5 15.75l7.5-7.5 7.5 7.5"
-              />
-            </svg>
-
-            <svg
-              onClick={changeOrder("descend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3 font-bold text-black"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </div>
-        </div>
-      ),
+      title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a: { name: string }, b: { name: any }) =>
-        a.name.localeCompare(b.name),
-      sortOrder: state.orderDirection,
-      ...getColumnSearchProps("name:"),
-      render: (text: any) => <a>{text}</a>,
+      sorter: (a, b) => a.name.length - b.name.length,
+      ...getColumnSearchProps("name"),
+      render: (text: any) => <span>{text}</span>,
     },
     {
-      title: (
-        <div className="flex justify-between font-bold text-sm text-black p-0">
-          Code{" "}
-          <div>
-            <svg
-              onClick={changeOrder("ascend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4.5 15.75l7.5-7.5 7.5 7.5"
-              />
-            </svg>
-
-            <svg
-              onClick={changeOrder("descend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3 font-bold text-black"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </div>
-        </div>
-      ),
+      title: "Code",
       dataIndex: "code",
       key: "code",
-      sorter: (a: { code: string }, b: { code: any }) =>
-        a.code.localeCompare(b.code),
-      sortOrder: state.orderDirection,
+      sorter: (a, b) => a.code.length - b.code.length,
+      ...getColumnSearchProps("code"),
     },
     {
-      title: (
-        <div className="flex justify-between font-bold text-sm text-black p-0">
-          Age{" "}
-          <div>
-            <svg
-              onClick={changeOrder("ascend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4.5 15.75l7.5-7.5 7.5 7.5"
-              />
-            </svg>
-
-            <svg
-              onClick={changeOrder("descend")}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-3 h-3 font-bold text-black"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </div>
-        </div>
-      ),
+      title: "Age",
       dataIndex: "age",
       key: "age",
-      sorter: (a: { age: number }, b: { age: number }) => a.age - b.age,
-      sortOrder: state.orderDirection,
+      sorter: (a, b) => a.age - b.age,
+      ...getColumnSearchProps("age"),
       ...getColumnFiltersProps,
     },
     {
@@ -403,7 +286,7 @@ function AppointmentsList() {
           Gender{" "}
           <div>
             <svg
-              onClick={changeOrder("ascend")}
+              onClick={changeOrder("sex", "ascend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -419,7 +302,7 @@ function AppointmentsList() {
             </svg>
 
             <svg
-              onClick={changeOrder("descend")}
+              onClick={changeOrder("sex", "descend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -448,9 +331,8 @@ function AppointmentsList() {
           value: "female",
         },
       ],
-      sorter: (a: { sex: string }, b: { sex: any }) =>
-        a.sex.localeCompare(b.sex),
-      sortOrder: state.orderDirection,
+      sortOrder: state.orderDirection["sex"] || null,
+      ...getColumnSearchProps("sex"),
       filterIcon: (filtered: any) => (
         <IonIcon className="text-black h-5 w-5" icon={filter} />
       ),
@@ -485,7 +367,7 @@ function AppointmentsList() {
           AppointmentDate{" "}
           <div>
             <svg
-              onClick={changeOrder("ascend")}
+              onClick={changeOrder("date", "ascend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -501,7 +383,7 @@ function AppointmentsList() {
             </svg>
 
             <svg
-              onClick={changeOrder("descend")}
+              onClick={changeOrder("date", "descend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -520,9 +402,8 @@ function AppointmentsList() {
       ),
       dataIndex: "date",
       key: "date",
-      sorter: (a: { date: string }, b: { date: any }) =>
-        a.date.localeCompare(b.date),
-      sortOrder: state.orderDirection,
+      sortOrder: state.orderDirection["date"] || null,
+      ...getColumnSearchProps("date"),
     },
     {
       title: (
@@ -530,7 +411,7 @@ function AppointmentsList() {
           DateOfRecordEntry{" "}
           <div>
             <svg
-              onClick={changeOrder("ascend")}
+              onClick={changeOrder("requestDate", "ascend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -546,7 +427,7 @@ function AppointmentsList() {
             </svg>
 
             <svg
-              onClick={changeOrder("descend")}
+              onClick={changeOrder("requestDate", "descend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -568,7 +449,8 @@ function AppointmentsList() {
       compare: (a: { requestDate: string }, b: { requestDate: any }) => {
         return a.requestDate.localeCompare(b.requestDate);
       },
-      sortOrder: state.orderDirection,
+      sortOrder: state.orderDirection["requestDate"] || null,
+      ...getColumnSearchProps("requestDate"),
     },
     {
       dataIndex: "status",
@@ -577,7 +459,7 @@ function AppointmentsList() {
           Status{" "}
           <div>
             <svg
-              onClick={changeOrder("ascend")}
+              onClick={changeOrder("status", "ascend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -593,7 +475,7 @@ function AppointmentsList() {
             </svg>
 
             <svg
-              onClick={changeOrder("descend")}
+              onClick={changeOrder("status", "descend")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -659,9 +541,8 @@ function AppointmentsList() {
       ),
       onFilter: (value: any, record: { status: string | any[] }) =>
         record.status.indexOf(value) === 0,
-      sorter: (a: { status: string }, b: { status: any }) =>
-        a.status.localeCompare(b.status),
-      sortOrder: state.orderDirection,
+      sortOrder: state.orderDirection["status"] || null,
+      ...getColumnSearchProps("status"),
     },
     {
       title: (
